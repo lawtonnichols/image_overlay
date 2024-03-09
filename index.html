@@ -24,6 +24,15 @@
       z-index: 10;
     }
 
+    #floating-controls {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform: scale(2);
+      padding: 10px;
+    }
+    
+
   </style>
 </head>
 <!-- https://web.dev/articles/media-capturing-images -->
@@ -36,30 +45,18 @@
       Front image: <input type="file" accept="image/*" id="file2-input" />
     </div>
     <div>
-      Back rotation: <input id="back-rotation" type="range" min="-180" max="180" step="any" value="0" />
-    </div>
-    <div>
-      Front rotation: <input id="front-rotation" type="range" min="-180" max="180" step="any" value="0" />
-    </div>
-    <div>
-      Front scale: <input id="front-scale" type="range" min="0" max="2" step="any" value="1" />
-    </div>
-    <div>
       Front opacity: <input id="front-opacity" type="range" min="0" max="1" step="any" value="0.5" />
-    </div>
-    <div>
-      Front x offset: <input id="front-x-offset" type="range" min="-1" max="1" step="any" value="0" />
-    </div>
-    <div>
-      Front y offset: <input id="front-y-offset" type="range" min="-1" max="1" step="any" value="0" />
     </div>
   </nav>
   <div id="image-container">
     <img id="image1" />
     <img id="image2" />
   </div>
+  <div id="floating-controls">
+    <input type="checkbox" id="toggle-zoomability" />
+  </div>
 
-<script src="./zoom-1.0.7.min.js">
+<script src="./zoom.js">
 // https://github.com/anitasv/zoom
 </script>
 
@@ -69,6 +66,7 @@ const file2Input = document.getElementById("file2-input");
 const image1 = document.getElementById("image1");
 const image2 = document.getElementById("image2");
 const frontOpacityRange = document.getElementById("front-opacity");
+let zm = null;
 
 function processFile1(fileList) {
   let file = null;
@@ -100,91 +98,40 @@ function processFile2(fileList) {
     image2.style.opacity = frontOpacityRange.value;
   }
 
-  let zm = new Zoom(image2, {
-    rotate: true,
-  });
+  if (zm != null) toggleZoomability();
+  // toggleZoomability();
 }
 
 function setFrontOpacity(newOpacity) {
   image2.style.opacity = newOpacity;
 }
 
+function toggleZoomability() {
+  if (zm == null) {
+    zm = new Zoom(image2, {
+      rotate: true,
+    });
+  } else {
+    zm.destroy();
+    zm = null;
+  }
+}
+
 file1Input.addEventListener('change', (e) =>
   processFile1(e.target.files),
 );
+
 file2Input.addEventListener('change', (e) =>
   processFile2(e.target.files),
 );
+
 frontOpacityRange.addEventListener('change', (e) =>
   setFrontOpacity(e.target.value),
 );
 
-let front_transform = {
-  rotate: 0,
-  scale: 1,
-  xOffset: 0,
-  yOffset: 0,
-};
-
-let back_transform = {
-  rotate: 0,
-  scale: 1,
-  xOffset: 0,
-  yOffset: 0,
-};
-
-let back_image = image1;
-let front_image = image2;
-
-function update_back_image() {
-  let scale = back_transform.scale;
-  let rotate = back_transform.rotate;
-
-  let width = back_image.naturalWidth;
-  let height = back_image.naturalHeight;
-  let translateX = back_transform.xOffset * width;
-  let translateY = back_transform.yOffset * height;
-  back_image.style.transform = `scale(${scale}, ${scale}) rotate(${rotate / 180}turn) translateX(${translateX}px) translateY(${translateY}px)`;
-  back_image.style.zIndex = 1;
-}
-
-function update_front_image() {
-  let scale = front_transform.scale;
-  let rotate = front_transform.rotate;
-
-  let width = front_image.naturalWidth;
-  let height = front_image.naturalHeight;
-  let translateX = front_transform.xOffset * width;
-  let translateY = front_transform.yOffset * height;
-  front_image.style.transform = `scale(${scale}, ${scale}) rotate(${rotate / 180}turn) translateX(${translateX}px) translateY(${translateY}px)`;
-  front_image.style.zIndex = 2;
-}
-
-document.getElementById("back-rotation").addEventListener("change", (e) => {
-  back_transform.rotate = e.target.value;
-  update_back_image();
+document.getElementById("toggle-zoomability").addEventListener('change', (e) => {
+  toggleZoomability();
 });
-
-document.getElementById("front-rotation").addEventListener("change", (e) => {
-  front_transform.rotate = e.target.value;
-  update_front_image();
-});
-
-document.getElementById("front-scale").addEventListener("change", (e) => {
-  front_transform.scale = e.target.value;
-  update_front_image();
-});
-
-document.getElementById("front-x-offset").addEventListener("change", (e) => {
-  front_transform.xOffset = e.target.value;
-  update_front_image();
-});
-
-document.getElementById("front-y-offset").addEventListener("change", (e) => {
-  front_transform.yOffset = e.target.value;
-  update_front_image();
-});
-
 </script>
 </body>
 </html>
