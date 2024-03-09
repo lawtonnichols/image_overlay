@@ -59,6 +59,10 @@
     <img id="image2" />
   </div>
 
+<script src="./zoom-1.0.7.min.js">
+// https://github.com/anitasv/zoom
+</script>
+
 <script>
 const file1Input = document.getElementById("file1-input");
 const file2Input = document.getElementById("file2-input");
@@ -95,6 +99,10 @@ function processFile2(fileList) {
     image2.src = URL.createObjectURL(file);
     image2.style.opacity = frontOpacityRange.value;
   }
+
+  let zm = new Zoom(image2, {
+    rotate: true,
+  });
 }
 
 function setFrontOpacity(newOpacity) {
