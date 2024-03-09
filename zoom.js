@@ -424,9 +424,9 @@ Zoom.prototype.destroy = function() {
     this.elemParent.removeEventListener('touchmove', this._handleZoom);
     this.elemParent.removeEventListener('touchend', this._handleZoom);
 
-    this.elem.style['will-change'] = null;
-    this.elem.style['transform-origin'] = null;
-    this.elem.style.transform = null;
+    // this.elem.style['will-change'] = null; // keep the transforms
+    // this.elem.style['transform-origin'] = null;
+    // this.elem.style.transform = null;
 };
 
 Zoom.prototype.previewZoom = function() {

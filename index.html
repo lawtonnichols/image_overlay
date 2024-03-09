@@ -38,6 +38,10 @@
     <div>
       Front opacity: <input id="front-opacity" type="range" min="0" max="1" step="any" value="0.5" />
     </div>
+    <div>
+      Double tap on the front image on a mobile device to pan, zoom, and rotate
+      it. Double tap once more to stop panning/zooming/rotating.
+    </div>
   </nav>
   <div id="image-container">
     <img id="image1" />
@@ -132,7 +136,7 @@ function tapHandler(event) {
   toggleZoomability();
 }
 
-// document.getElementById("image2").addEventListener("touchstart", tapHandler);
+document.getElementById("image2").addEventListener("touchstart", tapHandler);
 document.getElementById("image2").addEventListener("click", tapHandler);
 </script>
 </body>
