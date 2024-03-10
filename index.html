@@ -121,12 +121,12 @@ frontOpacityRange.addEventListener('change', (e) =>
   setFrontOpacity(e.target.value),
 );
 
-let tappedTwice = false;
+let tapCount = 0;
 
 function tapHandler(event) {
-  if (!tappedTwice) {
-      tappedTwice = true;
-      setTimeout( function() { tappedTwice = false; }, 300 );
+  if (tapCount < 2) {
+      tapCount++;
+      setTimeout( function() { tapCount = 0; }, 500 );
       return false;
   }
   event.preventDefault();
@@ -137,7 +137,7 @@ function tapHandler(event) {
 }
 
 document.getElementById("image2").addEventListener("touchstart", tapHandler);
-document.getElementById("image2").addEventListener("click", tapHandler);
+// document.getElementById("image2").addEventListener("click", tapHandler);
 </script>
 </body>
 </html>
