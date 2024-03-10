@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     img {
-      width: 100%;
+      width: 300%;
     }
 
     input[type="range"] {
@@ -24,6 +24,15 @@
       z-index: 10;
     }
 
+    #fixed-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transform: scale(4.0);
+      transform-origin: bottom left;
+      margin: 1px;
+    }
+
   </style>
 </head>
 <!-- https://web.dev/articles/media-capturing-images -->
@@ -39,13 +48,17 @@
       Front opacity: <input id="front-opacity" type="range" min="0" max="1" step="any" value="0.5" />
     </div>
     <div>
-      Double tap on the front image on a mobile device to pan, zoom, and rotate
-      it. Double tap once more to stop panning/zooming/rotating.
+      Check the box below on a mobile device to pan, zoom, and rotate
+      the front image. Double tap once more to stop
+      panning/zooming/rotating.
     </div>
   </nav>
   <div id="image-container">
     <img id="image1" />
     <img id="image2" />
+  </div>
+  <div id="fixed-container">
+    <input type="checkbox" id="checkbox" />
   </div>
 
 <script src="./zoom.js">
@@ -103,9 +116,13 @@ function toggleZoomability() {
     zm = new Zoom(image2, {
       rotate: true,
     });
+    zm.hasListeners = true;
+  } else if (zm.hasListeners) {
+    zm.removeListeners();
+    zm.hasListeners = false;
   } else {
-    zm.destroy();
-    zm = null;
+    zm.addBackListeners();
+    zm.hasListeners = true;
   }
 }
 
@@ -121,7 +138,7 @@ frontOpacityRange.addEventListener('change', (e) =>
   setFrontOpacity(e.target.value),
 );
 
-let tapCount = 0;
+/*let tapCount = 0;
 
 function tapHandler(event) {
   if (tapCount < 2) {
@@ -134,10 +151,20 @@ function tapHandler(event) {
   // action on double tap goes below
 
   toggleZoomability();
-}
+}*/
 
-document.getElementById("image2").addEventListener("touchstart", tapHandler);
-// document.getElementById("image2").addEventListener("click", tapHandler);
+// document.getElementById("image2").addEventListener("touchstart", tapHandler);
+
+function reposition() {
+  const elem = document.getElementById("fixed-container"); 
+  elem.style.left = window.pageXOffset + 8 + 'px';
+  elem.style.top = window.innerHeight + window.pageYOffset - 88 + 'px';
+}
+window.addEventListener("scroll", reposition);
+window.addEventListener("resize", reposition);
+document.getElementById("checkbox").addEventListener("change", (e) => {
+  toggleZoomability();
+});
 </script>
 </body>
 </html>

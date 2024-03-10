@@ -333,7 +333,8 @@ function Zoom(elem, config, wnd) {
     // see https://dev.opera.com/articles/css-will-change-property/
     elem.style['will-change'] = 'transform';
 
-    elem.style['transform-origin'] = '0 0';
+    // elem.style['transform-origin'] = '0 0';
+    elem.style['transform-origin'] = `${this.srcCoords[0]}px ${this.srcCoords[1]}px`;
 
     var getCoordsDouble = function(t) {
         var rect = elem.parentNode.getBoundingClientRect();
@@ -424,9 +425,23 @@ Zoom.prototype.destroy = function() {
     this.elemParent.removeEventListener('touchmove', this._handleZoom);
     this.elemParent.removeEventListener('touchend', this._handleZoom);
 
-    // this.elem.style['will-change'] = null; // keep the transforms
-    // this.elem.style['transform-origin'] = null;
-    // this.elem.style.transform = null;
+    this.elem.style['will-change'] = null;
+    this.elem.style['transform-origin'] = null;
+    this.elem.style.transform = null;
+};
+
+Zoom.prototype.removeListeners = function() {
+    this.elemParent.removeEventListener('touchstart', this._handleTouchStart);
+    this.elemParent.removeEventListener('touchstart', this._handleZoom);
+    this.elemParent.removeEventListener('touchmove', this._handleZoom);
+    this.elemParent.removeEventListener('touchend', this._handleZoom);
+};
+
+Zoom.prototype.addBackListeners = function() {
+    this.elemParent.addEventListener('touchstart', this._handleTouchStart);
+    this.elemParent.addEventListener('touchstart', this._handleZoom);
+    this.elemParent.addEventListener('touchmove', this._handleZoom);
+    this.elemParent.addEventListener('touchend', this._handleZoom);
 };
 
 Zoom.prototype.previewZoom = function() {
