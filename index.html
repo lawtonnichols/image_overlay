@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Image Overlay</title>
+  <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     img {
@@ -38,20 +39,21 @@
 <!-- https://web.dev/articles/media-capturing-images -->
 <body>
   <nav>
-    <div>
-      Back image: <input type="file" accept="image/*" id="file1-input" />
-    </div>
-    <div>
+    <p>
+      Check your drawing’s proportions by taking a picture of your reference and a picture of your art!
+    </p>
+    <p>
+      Back image: <input type="file" accept="image/*" id="file1-input" /><br />
       Front image: <input type="file" accept="image/*" id="file2-input" />
-    </div>
-    <div>
+    </p>
+    <p>
       Front opacity: <input id="front-opacity" type="range" min="0" max="1" step="any" value="0.5" />
-    </div>
-    <div>
-      Check the box below on a mobile device to pan, zoom, and rotate
-      the front image. Double tap once more to stop
-      panning/zooming/rotating.
-    </div>
+    </p>
+    <p>
+      Check the box below on a mobile device to pan, resize, and
+      rotate the front image. Uncheck it to stop
+      panning/resizing/rotating.
+    </p>
   </nav>
   <div id="image-container">
     <img id="image1" />
